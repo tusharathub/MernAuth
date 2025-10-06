@@ -75,7 +75,35 @@ export const verifyEmail = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    res.send("Login Controller");
+    const {email, password} = req.body;
+    try {
+        const user = await User.findOne({email});
+        if(!user) {
+            res.status(400).json({message: "Invalid credentials"});
+        }
+
+        const isPasswordValid = await bcryptjs.compare(password, user.password);
+        if(!isPasswordValid) {
+            res.status(400).json({message: "Invalid password"})
+        }
+
+        generateTokenAndSetCookie(res, user._id);
+
+        user.lastLogin = new Date();
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Logged in successfully",
+            user: {
+                ...user._doc,
+                password: undefined,
+            }
+        })
+    } catch (error) {
+        console.log("Error logging in user:", error);
+        res.status(500).json({message: "Server error", error: error.message});
+    }
 }
 
 export const logout = async (req, res) => {
