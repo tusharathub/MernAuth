@@ -2,6 +2,7 @@ import FloatingThing from './components/FloatingThing'
 import {Route, Routes} from "react-router-dom";
 import SignupPage from './pages/SignupPage';
 import LogInPage from './pages/LogInPage';
+import EmailVerificationPage from './pages/EmailVerificationPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/" element={"Home"} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LogInPage />} />
+      <Route path="/verify-email" element={<EmailVerificationPage />} />
     </Routes>
   </div>  
   )
