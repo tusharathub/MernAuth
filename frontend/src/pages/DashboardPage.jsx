@@ -5,6 +5,14 @@ import { formatDate } from "../utils/date.js";
 const DashboardPage = () => {
 	const { user, logout } = useAuthStore();
 
+  if(!user) {
+    return (
+      <div className='max-w-md w-full mx-auto mt-10 text-center text-xl text-green-400'>
+        Loading user data...
+      </div>
+    )
+  }
+
 	const handleLogout = () => {
 		logout();
 	};
