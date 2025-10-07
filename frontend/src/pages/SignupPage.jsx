@@ -1,33 +1,43 @@
 import { motion } from "framer-motion";
-import { Link, Navigate } from "react-router-dom";
 import Input from "../components/Input";
-import { User, Mail, Lock } from "lucide-react";
+import { Loader, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrength";
+import { useAuthStore } from "../store/useAuthStore";
 
-function SignupPage() {
+const SignUpPage = () => {
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const navigate = useNavigate();
 
-    const[email, setEmail] = useState("");
-    const[name, setName] = useState("");
-    const[password, setPassword] = useState("");
+	const { signup, error, isLoading } = useAuthStore();
 
-    const handleSignup = (e) => {
-        e.preventDefault();
-    }
+	const handleSignUp = async (e) => {
+		e.preventDefault();
 
-  return (
-    <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{opacity: 1, y: 1}}
-    transition={{duration: 0.5}}
-    className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden"
-    >
-      <div className='p-8'>
+		try {
+			await signup(email, password, name);
+			navigate("/verify-email");
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	return (
+		<motion.div
+			initial={{ opacity: 0, y: 20 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.5 }}
+			className='max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl 
+			overflow-hidden'
+		>
+			<div className='p-8'>
 				<h2 className='text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text'>
 					Create Account
 				</h2>
 
-				<form onSubmit={handleSignup}>
+				<form onSubmit={handleSignUp}>
 					<Input
 						icon={User}
 						type='text'
@@ -49,8 +59,8 @@ function SignupPage() {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
-					
-                    <PasswordStrengthMeter password={password}/>
+					{error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}
+					<PasswordStrengthMeter password={password} />
 
 					<motion.button
 						className='mt-5 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white 
@@ -60,12 +70,13 @@ function SignupPage() {
 						whileHover={{ scale: 1.02 }}
 						whileTap={{ scale: 0.98 }}
 						type='submit'
+						disabled={isLoading}
 					>
-                        SignUp Here
+						{isLoading ? <Loader className=' animate-spin mx-auto' size={24} /> : "Sign Up"}
 					</motion.button>
 				</form>
 			</div>
-        <div className='px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
+			<div className='px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
 				<p className='text-sm text-gray-400'>
 					Already have an account?{" "}
 					<Link to={"/login"} className='text-green-400 hover:underline'>
@@ -73,8 +84,7 @@ function SignupPage() {
 					</Link>
 				</p>
 			</div>
-    </motion.div>
-  )
-}
-
-export default SignupPage
+		</motion.div>
+	);
+};
+export default SignUpPage;
