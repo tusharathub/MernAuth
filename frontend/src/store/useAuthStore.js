@@ -1,7 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 
-const API_URL = "http:localhost:5000/api/auth";
+const API_URL = "http://localhost:5000/api/auth";
 axios.defaults.withCredentials = true;
 export const useAuthStore = create((set => ({
     user: null,
@@ -26,7 +26,7 @@ export const useAuthStore = create((set => ({
           const response = await axios.post(`${API_URL}/login`, { email, password});
           set({user: response.data.user, isAuthenticated: true, isLoading: false, error: null});
         }catch(error) {
-          set({error: error.response?.data?.message, isLoading: false});
+          set({error: error.response?.data?.message || "error while logging in", isLoading: false});
         }
     },
 
