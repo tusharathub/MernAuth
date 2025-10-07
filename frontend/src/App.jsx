@@ -83,7 +83,10 @@ function App() {
         </RedirectAuthenticatedUser>
       }
       />
+      {/* //to catch other routes */}
+      <Route path='*' element={<Navigate to='/' replace />} />
     </Routes>
+
     <Toaster/>
   </div>  
   )
