@@ -1,4 +1,22 @@
 
 ## MERN authentication system
 
-- It is going to be a fully working authentication setup using MERN stack
+- It is a fully working authentication setup made using MERN stack
+
+## Features 
+
+- User SignUp and Login
+- Email Verification
+- Forgot and Reset Password
+- Logout Functionality
+
+## Tech Stack
+
+**Frontend :** React , TailwindCSS
+
+**Server:** Node, Express, Bcrypt
+
+**Hosting:**  Render
+
+**Database:** MongoDB
+
