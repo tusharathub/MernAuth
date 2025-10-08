@@ -15,15 +15,11 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 const ProtectedRoutes = ({ children}) => {
   const { isAuthenticated, user} = useAuthStore();
 
-  if(!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if(!user) {
+  if(!user && !isAuthenticated) {
     return <Navigate to="/login" replace/>
   }
   
-  if(!user.isVerified) {
+  if(user && !user.isVerified) {
     return <Navigate to="/verify-email" replace/>
   }
 
@@ -34,7 +30,7 @@ const ProtectedRoutes = ({ children}) => {
 const RedirectAuthenticatedUser = ({children}) => {
   const {isAuthenticated, user} = useAuthStore();
 
-  if(isAuthenticated && user.isVerified) {
+  if(isAuthenticated && user && user.isVerified) {
     return <Navigate to="/" replace />
   }
   return children;
@@ -76,7 +72,7 @@ function App() {
     } />
       <Route path="/verify-email" element={<EmailVerificationPage />} />
       <Route path='/forgot-password' element={<ForgotPasswordPage/>} />
-      <Route path='/reset-password/"token'
+      <Route path='/reset-password/:token'
       element={
         <RedirectAuthenticatedUser>
           <ResetPasswordPage/>
